@@ -3,10 +3,10 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
+    "start": "node scripts/expo-start.js --clear",
+    "android": "node scripts/expo-start.js --android --clear",
+    "ios": "node scripts/expo-start.js --ios --clear",
+    "web": "node scripts/expo-start.js --web --clear"
   },
   "engines": {
     "node": ">=20.19.4 <24"
@@ -22,9 +22,11 @@
     "expo-splash-screen": "~31.0.13",
     "expo-status-bar": "~3.0.9",
     "expo-web-browser": "~15.0.10",
+    "nativewind": "^4.2.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-native": "0.81.5",
+    "react-native-gesture-handler": "~2.28.0",
     "react-native-reanimated": "~4.1.1",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",
@@ -32,12 +34,16 @@
     "react-native-worklets": "0.5.1"
   },
   "devDependencies": {
+    "@react-native/metro-config": "0.81.5",
     "@react-native/typescript-config": "^0.85.1",
     "@types/jest": "^30.0.0",
     "@types/react": "~19.1.0",
     "@types/react-test-renderer": "^19.1.0",
     "babel-plugin-module-resolver": "^5.0.3",
+    "babel-preset-expo": "54.0.10",
+    "prettier-plugin-tailwindcss": "0.5.11",
     "react-test-renderer": "19.1.0",
+    "tailwindcss": "3.4.17",
     "typescript": "~5.9.2"
   },
   "private": true
