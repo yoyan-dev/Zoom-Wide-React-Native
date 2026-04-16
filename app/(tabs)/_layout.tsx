@@ -1,57 +1,69 @@
-import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
+import { type BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import { Tabs } from "expo-router";
 
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
-
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
+import { AppHeader } from "@/components/layout/AppHeader";
+import { AppTabBar } from "@/components/layout/AppTabBar";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
+      tabBar={(props: BottomTabBarProps) => <AppTabBar {...props} />}
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
-      }}>
+        header: () => <AppHeader />,
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
+          title: "Home",
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="categories"
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "Categories",
+        }}
+      />
+      <Tabs.Screen
+        name="cart"
+        options={{
+          title: "Cart",
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+        }}
+      />
+      <Tabs.Screen
+        name="products"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="product-detail"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="order-tracking"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="home"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="auth"
+        options={{
+          href: null,
         }}
       />
     </Tabs>
