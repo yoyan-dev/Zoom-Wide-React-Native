@@ -4,9 +4,13 @@ import { type ComponentProps } from "react";
 export type MaterialIconName = ComponentProps<typeof MaterialIcons>["name"];
 
 export type CheckoutField = {
+  editable?: boolean;
+  multiline?: boolean;
   label: string;
   placeholder: string;
+  value: string;
   keyboardType?: "default" | "email-address" | "number-pad";
+  onChangeText?: (value: string) => void;
 };
 
 export type PaymentMethod = {
@@ -17,11 +21,11 @@ export type PaymentMethod = {
 
 export type CheckoutItem = {
   id: string;
+  image?: string | null;
   name: string;
   spec: string;
   quantity: number;
   price: string;
-  image: string;
 };
 
 export type CheckoutTotalLine = {

@@ -1,12 +1,16 @@
 import { View } from "react-native";
 
-import { steelBarProducts } from "../data";
+import { type ProductListingItem } from "../types";
 import { ProductListingCard } from "../ui/ProductListingCard";
 
-export function ProductGrid() {
+type ProductGridProps = {
+  products: ProductListingItem[];
+};
+
+export function ProductGrid({ products }: ProductGridProps) {
   return (
     <View className="flex-row flex-wrap gap-x-8 gap-y-12">
-      {steelBarProducts.map((product) => (
+      {products.map((product) => (
         <View className="min-w-[220px] flex-1" key={product.id}>
           <ProductListingCard product={product} />
         </View>

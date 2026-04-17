@@ -2,12 +2,29 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
-import { detailCopy } from "../data";
+import type { Product } from "@/types/product";
 
 const tabs = ["Description", "Certification", "Bulk Shipping"];
 
-export function DetailTabs() {
+type DetailTabsProps = {
+  product: Product;
+};
+
+function getDetailCopy(product: Product) {
+  const copy = [
+    product.handbook?.summary ?? product.description,
+    ...(product.handbook?.features ?? []),
+    ...(product.handbook?.applications ?? []),
+  ].filter((item): item is string => Boolean(item));
+
+  return copy.length > 0
+    ? copy
+    : ["Detailed product information will be available soon."];
+}
+
+export function DetailTabs({ product }: DetailTabsProps) {
   const router = useRouter();
+  const detailCopy = getDetailCopy(product);
 
   return (
     <View className="mt-20">

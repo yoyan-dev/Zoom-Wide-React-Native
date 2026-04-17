@@ -1,6 +1,17 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
-import { Image, Pressable, Text, View } from "react-native";
+import { useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
+
+import { useCartStore } from "@/store/cartStore";
+import { formatPhilippinePeso } from "@/utils/formatCurrency";
 
 import { type ProductListingItem, type ProductStatus } from "../types";
 
@@ -22,18 +33,46 @@ const statusLabelByStatus: Record<ProductStatus, string> = {
 
 export function ProductListingCard({ product }: ProductListingCardProps) {
   const router = useRouter();
+  const addItem = useCartStore((state) => state.addItem);
+  const [isAdding, setIsAdding] = useState(false);
   const unavailable = product.status === "out-of-stock";
+
+  const handleAddToCart = async () => {
+    if (unavailable || isAdding) {
+      return;
+    }
+
+    setIsAdding(true);
+
+    try {
+      await addItem(product.id, 1);
+      router.push("/cart");
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Unable to add this product to your cart right now.";
+      Alert.alert("Cart unavailable", message);
+    } finally {
+      setIsAdding(false);
+    }
+  };
 
   return (
     <Pressable
       className={unavailable ? "opacity-60" : ""}
-      onPress={() => router.push("/product-detail")}
+      onPress={() =>
+        router.push({
+          pathname: "/product-detail",
+          params: { product_id: product.id },
+        })
+      }
     >
       <View className="relative mb-4 aspect-[4/5] items-center justify-center overflow-hidden rounded-xl bg-white p-4">
         <Image
           className="h-full w-full"
           resizeMode="contain"
-          source={{ uri: product.image }}
+          source={{ uri: product.image_url ?? undefined }}
         />
         <View
           className={[
@@ -52,14 +91,14 @@ export function ProductListingCard({ product }: ProductListingCardProps) {
           {product.name}
         </Text>
         <Text className="mt-1 text-sm font-semibold text-neutral-600">
-          {product.specification}
+          {product.description ?? product.sku ?? "Product specification available on detail view."}
         </Text>
 
         <View className="flex-row items-end justify-between gap-4 pt-4">
           <Text className="flex-1 text-2xl font-black text-primary-900">
-            {product.price}{" "}
+            {formatPhilippinePeso(product.price)}{" "}
             <Text className="text-xs font-normal text-neutral-500">
-              {product.unit}
+              {product.unit ? `/${product.unit}` : ""}
             </Text>
           </Text>
 
@@ -68,17 +107,21 @@ export function ProductListingCard({ product }: ProductListingCardProps) {
               "h-10 w-10 items-center justify-center rounded-lg",
               unavailable ? "bg-neutral-300" : "bg-accent-600 active:bg-accent-700",
             ].join(" ")}
-            disabled={unavailable}
+            disabled={unavailable || isAdding}
             onPress={(event) => {
               event.stopPropagation();
-              router.push("/cart");
+              void handleAddToCart();
             }}
           >
-            <MaterialIcons
-              color={unavailable ? "#667080" : "#ffffff"}
-              name={unavailable ? "block" : "add-shopping-cart"}
-              size={22}
-            />
+            {isAdding ? (
+              <ActivityIndicator color="#ffffff" size="small" />
+            ) : (
+              <MaterialIcons
+                color={unavailable ? "#667080" : "#ffffff"}
+                name={unavailable ? "block" : "add-shopping-cart"}
+                size={22}
+              />
+            )}
           </Pressable>
         </View>
       </View>

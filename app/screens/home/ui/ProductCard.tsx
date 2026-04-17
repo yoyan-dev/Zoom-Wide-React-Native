@@ -1,37 +1,103 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
-import { Image, Pressable, Text, View } from "react-native";
+import { useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
+
+import { useCartStore } from "@/store/cartStore";
+import type { Product } from "@/types/product";
+import { formatPhilippinePeso } from "@/utils/formatCurrency";
 
 import { homeStyles } from "../styles";
-import { type Product } from "../types";
 
 type ProductCardProps = {
+  featured?: boolean;
   product: Product;
 };
 
-export function ProductCard({ product }: ProductCardProps) {
-  const router = useRouter();
+function ProductImage({ imageUrl }: { imageUrl?: string | null }) {
+  if (!imageUrl) {
+    return (
+      <View className="h-full w-full items-center justify-center bg-neutral-100">
+        <MaterialIcons name="inventory-2" size={36} color="#8E97A3" />
+      </View>
+    );
+  }
 
-  if (product.featured) {
-    return <FeaturedProductCard product={product} />;
+  return (
+    <Image
+      className="h-full w-full opacity-90"
+      resizeMode="cover"
+      source={{ uri: imageUrl }}
+    />
+  );
+}
+
+export function ProductCard({ featured, product }: ProductCardProps) {
+  const router = useRouter();
+  const addItem = useCartStore((state) => state.addItem);
+  const [isAdding, setIsAdding] = useState(false);
+
+  const openProduct = () => {
+    router.push(
+      product.id
+        ? {
+            pathname: "/product-detail",
+            params: { product_id: product.id },
+          }
+        : "/products",
+    );
+  };
+
+  const handleAddToCart = async () => {
+    if (!product.id || isAdding) {
+      return;
+    }
+
+    setIsAdding(true);
+
+    try {
+      await addItem(product.id, 1);
+      router.push("/cart");
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Unable to add this product to your cart right now.";
+      Alert.alert("Cart unavailable", message);
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
+  if (featured) {
+    return (
+      <FeaturedProductCard
+        isAdding={isAdding}
+        onAddToCart={handleAddToCart}
+        product={product}
+      />
+    );
   }
 
   return (
     <Pressable
       className="w-full rounded-xl bg-white p-5"
-      onPress={() => router.push("/product-detail")}
+      onPress={openProduct}
       style={homeStyles.cardShadow}
     >
       <View className="mb-4 h-40 overflow-hidden rounded-lg bg-neutral-100">
-        <Image
-          className="h-full w-full opacity-90"
-          resizeMode="cover"
-          source={{ uri: product.image }}
-        />
+        <ProductImage imageUrl={product.image_url} />
       </View>
 
       <Text className="mb-1 text-sm font-black uppercase tracking-tight text-primary-900">
-        {product.title}
+        {product.name ?? product.sku ?? "Product"}
       </Text>
       <Text className="mb-4 text-xs font-semibold text-neutral-500">
         {product.description}
@@ -39,44 +105,62 @@ export function ProductCard({ product }: ProductCardProps) {
 
       <View className="mt-auto flex-row items-center justify-between">
         <Text className="text-lg font-black text-primary-900">
-          {product.price}
+          {formatPhilippinePeso(product.price)}
         </Text>
         <Pressable
           className="h-10 w-10 items-center justify-center rounded-lg bg-neutral-100 active:opacity-70"
+          disabled={!product.id || isAdding}
           onPress={(event) => {
             event.stopPropagation();
-            router.push("/cart");
+            void handleAddToCart();
           }}
         >
-          <MaterialIcons name="add" size={22} color="#0A2238" />
+          {isAdding ? (
+            <ActivityIndicator color="#0A2238" size="small" />
+          ) : (
+            <MaterialIcons name="add" size={22} color="#0A2238" />
+          )}
         </Pressable>
       </View>
     </Pressable>
   );
 }
 
-function FeaturedProductCard({ product }: ProductCardProps) {
+function FeaturedProductCard({
+  isAdding,
+  onAddToCart,
+  product,
+}: ProductCardProps & {
+  isAdding: boolean;
+  onAddToCart: () => Promise<void>;
+}) {
   const router = useRouter();
+  const openProduct = () => {
+    router.push(
+      product.id
+        ? {
+            pathname: "/product-detail",
+            params: { product_id: product.id },
+          }
+        : "/products",
+    );
+  };
 
   return (
     <Pressable
       className="w-full rounded-xl bg-white p-6"
-      onPress={() => router.push("/product-detail")}
+      onPress={openProduct}
       style={homeStyles.cardShadow}
     >
       <View className="mb-6 h-64 overflow-hidden rounded-lg bg-neutral-100">
-        <Image
-          className="h-full w-full opacity-90"
-          resizeMode="cover"
-          source={{ uri: product.image }}
-        />
+        <ProductImage imageUrl={product.image_url} />
       </View>
 
       <View className="gap-4">
         <View className="flex-row items-start justify-between gap-4">
           <View className="flex-1">
             <Text className="mb-1 text-2xl font-black uppercase tracking-tight text-primary-900">
-              {product.title}
+              {product.name ?? product.sku ?? "Product"}
             </Text>
             <Text className="font-semibold text-neutral-500">
               {product.description}
@@ -84,10 +168,10 @@ function FeaturedProductCard({ product }: ProductCardProps) {
           </View>
 
           <Text className="text-right text-2xl font-black text-primary-900">
-            {product.price}{" "}
+            {formatPhilippinePeso(product.price)}{" "}
             {product.unit ? (
               <Text className="text-xs font-normal text-neutral-400">
-                {product.unit}
+                /{product.unit}
               </Text>
             ) : null}
           </Text>
@@ -95,14 +179,19 @@ function FeaturedProductCard({ product }: ProductCardProps) {
 
         <Pressable
           className="min-h-14 flex-row items-center justify-center gap-2 rounded-lg bg-primary-900 px-5 py-4 active:bg-primary-800"
+          disabled={!product.id || isAdding}
           onPress={(event) => {
             event.stopPropagation();
-            router.push("/cart");
+            void onAddToCart();
           }}
         >
-          <MaterialIcons name="add-shopping-cart" size={22} color="#ffffff" />
+          {isAdding ? (
+            <ActivityIndicator color="#ffffff" size="small" />
+          ) : (
+            <MaterialIcons name="add-shopping-cart" size={22} color="#ffffff" />
+          )}
           <Text className="text-sm font-black uppercase tracking-widest text-white">
-            Add To Order
+            {isAdding ? "Adding..." : "Add To Order"}
           </Text>
         </Pressable>
       </View>

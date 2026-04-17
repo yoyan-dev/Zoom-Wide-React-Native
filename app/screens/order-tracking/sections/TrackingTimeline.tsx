@@ -1,10 +1,14 @@
 import { View } from "react-native";
 
-import { trackingSteps } from "../data";
 import { orderTrackingStyles } from "../styles";
+import type { TrackingStep } from "../types";
 import { TimelineStep } from "../ui/TimelineStep";
 
-export function TrackingTimeline() {
+type TrackingTimelineProps = {
+  trackingSteps: TrackingStep[];
+};
+
+export function TrackingTimeline({ trackingSteps }: TrackingTimelineProps) {
   return (
     <View
       className="overflow-hidden rounded-xl border border-neutral-200 bg-white p-8"

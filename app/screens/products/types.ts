@@ -1,11 +1,8 @@
+import type { Product } from "@/types/product";
+
 export type ProductStatus = "in-stock" | "limited-stock" | "out-of-stock";
 
-export type ProductListingItem = {
+export type ProductListingItem = Product & {
   id: string;
-  name: string;
-  specification: string;
-  price: string;
-  unit: string;
   status: ProductStatus;
-  image: string;
 };

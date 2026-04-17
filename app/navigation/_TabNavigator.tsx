@@ -25,15 +25,21 @@ export function TabNavigator() {
         }}
       />
       <Tabs.Screen
-        name="cart"
+        name="orders"
         options={{
-          title: "Cart",
+          title: "Orders",
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",
+        }}
+      />
+      <Tabs.Screen
+        name="cart"
+        options={{
+          href: null,
         }}
       />
       <Tabs.Screen

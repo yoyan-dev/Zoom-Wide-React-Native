@@ -1,8 +1,12 @@
 import { Text, View } from "react-native";
 
-import { trackingOrder } from "../data";
+import type { TrackingOrderSummary } from "../types";
 
-export function TrackingHero() {
+type TrackingHeroProps = {
+  trackingOrder: TrackingOrderSummary;
+};
+
+export function TrackingHero({ trackingOrder }: TrackingHeroProps) {
   return (
     <View className="mb-12">
       <Text className="mb-2 text-xs font-black uppercase tracking-widest text-accent-700">

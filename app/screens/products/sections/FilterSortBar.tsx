@@ -2,11 +2,15 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
-import { activeFilters } from "../data";
 import { FilterChip } from "../ui/FilterChip";
 import { SortSelect } from "../ui/SortSelect";
 
-export function FilterSortBar() {
+type FilterSortBarProps = {
+  filters: string[];
+  sortLabel: string;
+};
+
+export function FilterSortBar({ filters, sortLabel }: FilterSortBarProps) {
   const router = useRouter();
 
   return (
@@ -20,12 +24,12 @@ export function FilterSortBar() {
           <Text className="text-sm font-black uppercase text-white">Filters</Text>
         </Pressable>
 
-        {activeFilters.map((filter) => (
+        {filters.map((filter) => (
           <FilterChip key={filter} label={filter} />
         ))}
       </View>
 
-      <SortSelect />
+      <SortSelect label={sortLabel} />
     </View>
   );
 }

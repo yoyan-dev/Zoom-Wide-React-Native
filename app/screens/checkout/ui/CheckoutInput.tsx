@@ -13,10 +13,19 @@ export function CheckoutInput({ field }: CheckoutInputProps) {
         {field.label}
       </Text>
       <TextInput
-        className="rounded-lg bg-neutral-200 p-4 text-base font-semibold text-neutral-900"
+        className={[
+          "rounded-lg p-4 text-base font-semibold text-neutral-900",
+          field.editable === false ? "bg-neutral-100 text-neutral-600" : "bg-neutral-200",
+          field.multiline ? "min-h-28 pt-4" : "",
+        ].join(" ")}
+        editable={field.editable ?? true}
         keyboardType={field.keyboardType ?? "default"}
+        multiline={field.multiline}
+        onChangeText={field.onChangeText}
         placeholder={field.placeholder}
         placeholderTextColor="#8E97A3"
+        textAlignVertical={field.multiline ? "top" : "center"}
+        value={field.value}
       />
     </View>
   );

@@ -1,18 +1,28 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
-import {
-  checkoutItems,
-  checkoutTotals,
-  grandTotal,
-} from "../data";
 import { checkoutStyles } from "../styles";
+import { type CheckoutItem, type CheckoutTotalLine } from "../types";
 import { SummaryProductRow } from "../ui/SummaryProductRow";
 import { TotalLine } from "../ui/TotalLine";
 
-export function CheckoutSummary() {
-  const router = useRouter();
+type CheckoutSummaryProps = {
+  error?: string | null;
+  isSubmitting?: boolean;
+  items: CheckoutItem[];
+  lines: CheckoutTotalLine[];
+  onSubmit: () => void;
+  total: string;
+};
+
+export function CheckoutSummary({
+  error,
+  isSubmitting,
+  items,
+  lines,
+  onSubmit,
+  total,
+}: CheckoutSummaryProps) {
 
   return (
     <View className="gap-6">
@@ -25,13 +35,13 @@ export function CheckoutSummary() {
         </Text>
 
         <View className="mb-8 gap-6">
-          {checkoutItems.map((item) => (
+          {items.map((item) => (
             <SummaryProductRow item={item} key={item.id} />
           ))}
         </View>
 
         <View className="mb-8 gap-3 border-t border-neutral-100 pt-6">
-          {checkoutTotals.map((line) => (
+          {lines.map((line) => (
             <TotalLine key={line.label} line={line} />
           ))}
         </View>
@@ -42,22 +52,29 @@ export function CheckoutSummary() {
               Grand Total
             </Text>
             <Text className="text-4xl font-black text-primary-900">
-              {grandTotal}
+              {total}
             </Text>
           </View>
           <View className="rounded-full bg-green-100 px-3 py-1">
             <Text className="text-[10px] font-black uppercase tracking-widest text-green-700">
-              Pro Discount Applied
+              Secure Order Review
             </Text>
           </View>
         </View>
 
+        {error ? (
+          <View className="mb-6 rounded-lg border border-red-100 bg-red-50 p-4">
+            <Text className="text-sm font-black text-red-700">{error}</Text>
+          </View>
+        ) : null}
+
         <Pressable
           className="flex-row items-center justify-center gap-3 rounded-lg bg-primary-900 py-5 shadow-xl active:bg-primary-800"
-          onPress={() => router.replace("/order-success")}
+          disabled={isSubmitting || items.length === 0}
+          onPress={onSubmit}
         >
           <Text className="text-sm font-black uppercase tracking-widest text-white">
-            Place Order
+            {isSubmitting ? "Placing Order..." : "Place Order"}
           </Text>
           <MaterialIcons name="arrow-forward" size={20} color="#ffffff" />
         </Pressable>

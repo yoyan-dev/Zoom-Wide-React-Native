@@ -11,14 +11,16 @@ export function ProductThumbnail({ thumbnail }: ProductThumbnailProps) {
   return (
     <View
       className={[
-        "aspect-square flex-1 items-center justify-center rounded-lg bg-white p-2",
-        thumbnail.active ? "border-2 border-primary-900" : "border-2 border-neutral-200",
+        "max-w-16 max-h-16 aspect-square flex-1 items-center justify-center rounded-lg bg-white p-2",
+        thumbnail.active
+          ? "border-2 border-primary-900"
+          : "border-2 border-neutral-200",
       ].join(" ")}
     >
       {thumbnail.image ? (
         <Image
           className={[
-            "h-full w-full rounded-md",
+            "h-16 w-16 rounded-md",
             thumbnail.active ? "" : "opacity-60",
           ].join(" ")}
           resizeMode="cover"

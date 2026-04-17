@@ -10,11 +10,13 @@ export function SummaryProductRow({ item }: SummaryProductRowProps) {
   return (
     <View className="flex-row gap-4">
       <View className="h-20 w-20 overflow-hidden rounded-lg bg-neutral-100">
-        <Image
-          className="h-full w-full"
-          resizeMode="cover"
-          source={{ uri: item.image }}
-        />
+        {item.image ? (
+          <Image
+            className="h-full w-full"
+            resizeMode="cover"
+            source={{ uri: item.image }}
+          />
+        ) : null}
       </View>
 
       <View className="flex-1">

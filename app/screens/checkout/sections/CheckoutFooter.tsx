@@ -1,7 +1,12 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Text, View } from "react-native";
 
-import { footerTrustItems } from "../data";
+import { type FooterTrustItem } from "../types";
+
+const footerTrustItems: FooterTrustItem[] = [
+  { icon: "support-agent", label: "24/7 Field Support" },
+  { icon: "policy", label: "Privacy Protocol" },
+];
 
 export function CheckoutFooter() {
   return (

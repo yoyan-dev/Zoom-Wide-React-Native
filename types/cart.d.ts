@@ -24,9 +24,10 @@ export interface CartLineItem {
   product_id: string;
   sku?: string | null;
   category_id?: string | null;
-  name: string;
-  image_url: string | null;
-  unit: string;
-  price: number;
+  name?: string | null;
+  image_url?: string | null;
+  unit?: string | null;
+  price?: number | null;
+  unit_price?: number | null;
   quantity: number;
 }

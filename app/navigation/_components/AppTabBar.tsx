@@ -21,9 +21,9 @@ const TAB_META: Record<
     icon: "grid-view",
     label: "Categories",
   },
-  cart: {
-    icon: "shopping-bag",
-    label: "Cart",
+  orders: {
+    icon: "receipt-long",
+    label: "Orders",
   },
   profile: {
     icon: "person",
@@ -32,12 +32,16 @@ const TAB_META: Record<
 };
 
 const ACTIVE_TAB_ALIASES: Record<string, keyof typeof TAB_META> = {
-  "order-tracking": "profile",
+  "order-tracking": "orders",
   "product-detail": "categories",
   products: "categories",
 };
 
-export function AppTabBar({ descriptors, navigation, state }: BottomTabBarProps) {
+export function AppTabBar({
+  descriptors,
+  navigation,
+  state,
+}: BottomTabBarProps) {
   const visibleRoutes = state.routes.filter((route) => route.name in TAB_META);
   const activeRouteName = state.routes[state.index]?.name;
   const activeTabName = ACTIVE_TAB_ALIASES[activeRouteName] ?? activeRouteName;

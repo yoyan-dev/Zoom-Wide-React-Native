@@ -61,7 +61,7 @@ export const packageItems: PackageItem[] = [
     id: "beam-set",
     name: "Structural I-Beam Set (x12)",
     sku: "ZW-STR-449",
-    price: "$4,250.00",
+    price: "\u20B14,250.00",
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuDe7NbCn0VO0MQKM4IrnVRzJY1L90HxjQeWl8A2Qz4ksDzVXSPaH554xzyjrlCszepQbbeZl6Ycon6YIJ2UIclGHC9-R4YmpXGmQZ_ZswFDaS9jv6vqv1G9tELBy7L9VZF9c1zdtYJgUy3Kc7iKThhQEJsUK_cMDy4-03HgSMAwAoLedReHvUwH2JwRUvwEUskRJS2nz4PdlgdFx1G1BLKtuxpTrdHtbZJZomNOHNadMO55-rdHFhJBGrkoFhPLjIb8J2Nb5QP7exA",
   },
@@ -69,7 +69,7 @@ export const packageItems: PackageItem[] = [
     id: "anchors",
     name: "Concrete Anchors Bulk (200pk)",
     sku: "ZW-ANC-112",
-    price: "$185.00",
+    price: "\u20B1185.00",
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuAH1vdSnuJ7De7o3F3Pl_H4fH7NyWw-xAEBTeF62PgxI3KDzUZ0LfVXd_8nGdYLOhLz947MG5H3RAiycoYuHH__jZ5Qxv5Mu2IpNn1fnNFnG8a6Ot4DjVHqKKVLzwjYz8ajH75--Dwao0PdTLDz-SazhtK0hDVJ2AYzYLhGsmRJ3ZzVD5Dje0efVvuCI1JKFL-r9PhK-PBi5u9pR8sq9cvzixqxJ1qckN2b-lTeAeTC3K-sf3iIqYrmGfFQTKvHTwcQ36UmhQVNZa8",
   },

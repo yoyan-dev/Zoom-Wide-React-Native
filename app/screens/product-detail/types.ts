@@ -14,11 +14,3 @@ export type ProductThumbnail = {
   icon?: MaterialIconName;
   active?: boolean;
 };
-
-export type RelatedProduct = {
-  id: string;
-  name: string;
-  price: string;
-  status: string;
-  image: string;
-};

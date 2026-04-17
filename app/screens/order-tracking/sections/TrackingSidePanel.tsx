@@ -2,11 +2,25 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
-import { deliveryAddress, packageItems, trackingOrder } from "../data";
 import { DeliveryMapCard } from "../ui/DeliveryMapCard";
 import { PackageDetailRow } from "../ui/PackageDetailRow";
+import type {
+  DeliveryAddress,
+  PackageItem,
+  TrackingOrderSummary,
+} from "../types";
 
-export function TrackingSidePanel() {
+type TrackingSidePanelProps = {
+  deliveryAddress: DeliveryAddress;
+  packageItems: PackageItem[];
+  trackingOrder: TrackingOrderSummary;
+};
+
+export function TrackingSidePanel({
+  deliveryAddress,
+  packageItems,
+  trackingOrder,
+}: TrackingSidePanelProps) {
   const router = useRouter();
 
   return (

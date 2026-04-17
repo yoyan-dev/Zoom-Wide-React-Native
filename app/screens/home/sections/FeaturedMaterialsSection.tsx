@@ -1,12 +1,32 @@
 import { useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
-import { featuredMaterials } from "../data";
+import type { Product } from "@/types/product";
+
 import { ProductCard } from "../ui/ProductCard";
 
-export function FeaturedMaterialsSection() {
+type FeaturedMaterialsSectionProps = {
+  products: Product[];
+};
+
+export function FeaturedMaterialsSection({
+  products,
+}: FeaturedMaterialsSectionProps) {
   const router = useRouter();
-  const [featuredProduct, ...standardProducts] = featuredMaterials;
+  const [featuredProduct, ...standardProducts] = products;
+
+  if (products.length === 0) {
+    return (
+      <View className="mb-12 rounded-lg bg-white p-6">
+        <Text className="text-base font-black text-primary-900">
+          No featured materials yet
+        </Text>
+        <Text className="mt-2 text-sm font-semibold text-neutral-500">
+          Products will appear here once the catalog is published.
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <View className="mb-12">
@@ -30,7 +50,9 @@ export function FeaturedMaterialsSection() {
       </View>
 
       <View className="gap-6">
-        {featuredProduct ? <ProductCard product={featuredProduct} /> : null}
+        {featuredProduct ? (
+          <ProductCard featured product={featuredProduct} />
+        ) : null}
 
         <View className="flex-row flex-wrap gap-6">
           {standardProducts.map((product) => (

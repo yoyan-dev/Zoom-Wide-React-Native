@@ -26,3 +26,9 @@ export type DeliveryAddress = {
   lines: string[];
   mapImage: string;
 };
+
+export type TrackingOrderSummary = {
+  orderNumber: string;
+  estimatedArrival: string;
+  totalWeight: string;
+};

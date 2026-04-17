@@ -2,6 +2,8 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
+import { useAuthStore } from "@/store/authStore";
+
 import { type ProfileOption } from "../types";
 
 type ProfileOptionRowProps = {
@@ -10,11 +12,21 @@ type ProfileOptionRowProps = {
 
 export function ProfileOptionRow({ option }: ProfileOptionRowProps) {
   const router = useRouter();
+  const signOut = useAuthStore((state) => state.signOut);
 
   const handlePress = () => {
     switch (option.label) {
+      case "Settings":
+        router.push("/edit-profile");
+        return;
+      case "Security Settings":
+        router.push("/security-settings");
+        return;
       case "Order History":
-        router.push("/order-tracking");
+        router.push("/orders");
+        return;
+      case "Saved Addresses":
+        router.push("/delivery-addresses");
         return;
       case "Wishlist":
         router.push("/products");
@@ -25,10 +37,15 @@ export function ProfileOptionRow({ option }: ProfileOptionRowProps) {
   };
 
   if (option.destructive) {
+    const handleSignOut = async () => {
+      await signOut();
+      router.replace("/login");
+    };
+
     return (
       <Pressable
         className="flex-row items-center justify-between rounded-xl border-l-4 border-red-700 bg-red-50 p-5 active:opacity-80"
-        onPress={() => router.replace("/onboarding")}
+        onPress={handleSignOut}
       >
         <View className="flex-row items-center gap-4">
           <View className="h-10 w-10 items-center justify-center rounded-lg">

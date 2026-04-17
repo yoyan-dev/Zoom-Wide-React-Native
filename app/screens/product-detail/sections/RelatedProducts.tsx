@@ -2,11 +2,20 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
-import { relatedProducts } from "../data";
+import type { Product } from "@/types/product";
+
 import { RelatedProductCard } from "../ui/RelatedProductCard";
 
-export function RelatedProducts() {
+type RelatedProductsProps = {
+  products: Product[];
+};
+
+export function RelatedProducts({ products }: RelatedProductsProps) {
   const router = useRouter();
+
+  if (products.length === 0) {
+    return null;
+  }
 
   return (
     <View className="mt-24">
@@ -26,7 +35,7 @@ export function RelatedProducts() {
       </View>
 
       <View className="flex-row flex-wrap gap-6">
-        {relatedProducts.map((product) => (
+        {products.map((product) => (
           <RelatedProductCard key={product.id} product={product} />
         ))}
       </View>

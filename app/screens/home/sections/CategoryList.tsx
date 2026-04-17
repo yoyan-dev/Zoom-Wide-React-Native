@@ -1,9 +1,18 @@
 import { ScrollView } from "react-native";
 
-import { categories } from "../data";
+import type { Category } from "@/types/category";
+
 import { CategoryPill } from "../ui/CategoryPill";
 
-export function CategoryList() {
+type CategoryListProps = {
+  categories: Category[];
+};
+
+export function CategoryList({ categories }: CategoryListProps) {
+  if (categories.length === 0) {
+    return null;
+  }
+
   return (
     <ScrollView
       className="mb-10"
@@ -13,9 +22,8 @@ export function CategoryList() {
     >
       {categories.map((category) => (
         <CategoryPill
-          icon={category.icon}
-          key={category.label}
-          label={category.label}
+          category={category}
+          key={category.id}
         />
       ))}
     </ScrollView>

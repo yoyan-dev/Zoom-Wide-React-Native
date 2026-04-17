@@ -1,22 +1,28 @@
-import { View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
-import {
-  addressFields,
-  cardFields,
-  contactFields,
-  paymentMethods,
-} from "../data";
 import { CheckoutInput } from "../ui/CheckoutInput";
 import { CheckoutSectionTitle } from "../ui/CheckoutSectionTitle";
-import { PaymentMethodCard } from "../ui/PaymentMethodCard";
+import { type CheckoutField } from "../types";
 
-export function CheckoutForm() {
+type CheckoutFormProps = {
+  accountFields: CheckoutField[];
+  deliveryAddressLines: string[];
+  onChangeAddress: () => void;
+  noteField: CheckoutField;
+};
+
+export function CheckoutForm({
+  accountFields,
+  deliveryAddressLines,
+  onChangeAddress,
+  noteField,
+}: CheckoutFormProps) {
   return (
     <View className="gap-12">
       <View>
         <CheckoutSectionTitle icon="contact-page" title="Contact Information" />
         <View className="gap-4">
-          {contactFields.map((field) => (
+          {accountFields.map((field) => (
             <CheckoutInput field={field} key={field.label} />
           ))}
         </View>
@@ -25,26 +31,40 @@ export function CheckoutForm() {
       <View>
         <CheckoutSectionTitle icon="location-on" title="Delivery Address" />
         <View className="gap-4">
-          {addressFields.map((field) => (
-            <CheckoutInput field={field} key={field.label} />
-          ))}
+          <View className="rounded-xl bg-white p-6">
+            {deliveryAddressLines.length ? (
+              <View className="gap-3">
+                {deliveryAddressLines.map((line) => (
+                  <Text
+                    className="text-sm font-medium leading-6 text-neutral-700"
+                    key={line}
+                  >
+                    {line}
+                  </Text>
+                ))}
+              </View>
+            ) : (
+              <Text className="text-sm font-medium leading-6 text-neutral-500">
+                No default delivery address selected yet.
+              </Text>
+            )}
+
+            <Pressable
+              className="mt-5 self-start rounded-lg border border-primary-200 px-4 py-3 active:bg-primary-50"
+              onPress={onChangeAddress}
+            >
+              <Text className="text-xs font-black uppercase tracking-widest text-primary-900">
+                Change Address
+              </Text>
+            </Pressable>
+          </View>
         </View>
       </View>
 
       <View>
-        <CheckoutSectionTitle icon="payments" title="Payment Method" />
+        <CheckoutSectionTitle icon="description" title="Order Notes" />
         <View className="gap-4">
-          <View className="flex-row flex-wrap gap-4">
-            {paymentMethods.map((method) => (
-              <PaymentMethodCard key={method.label} method={method} />
-            ))}
-          </View>
-
-          <View className="gap-4 rounded-lg bg-neutral-100 p-6">
-            {cardFields.map((field) => (
-              <CheckoutInput field={field} key={field.label} />
-            ))}
-          </View>
+          <CheckoutInput field={noteField} />
         </View>
       </View>
     </View>

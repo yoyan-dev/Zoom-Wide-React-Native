@@ -1,9 +1,13 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Text, View } from "react-native";
 
-const crumbs = ["Construction", "Materials", "Steel Bars"];
+type BreadcrumbsProps = {
+  currentLabel: string;
+};
 
-export function Breadcrumbs() {
+export function Breadcrumbs({ currentLabel }: BreadcrumbsProps) {
+  const crumbs = ["Construction", "Materials", currentLabel];
+
   return (
     <View className="mb-4 flex-row flex-wrap items-center gap-2">
       {crumbs.map((crumb, index) => {

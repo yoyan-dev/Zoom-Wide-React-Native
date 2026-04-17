@@ -2,12 +2,26 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
-import { orderTotal, summaryLines } from "../data";
+import { formatPhilippinePeso } from "@/utils/formatCurrency";
+
 import { cartStyles } from "../styles";
+import { type SummaryLine } from "../types";
 import { SummaryLineItem } from "../ui/SummaryLineItem";
 import { TradeGuarantee } from "../ui/TradeGuarantee";
 
-export function OrderSummary() {
+type OrderSummaryProps = {
+  isCheckingOut?: boolean;
+  lines: SummaryLine[];
+  onCheckout: () => void;
+  total: number;
+};
+
+export function OrderSummary({
+  isCheckingOut,
+  lines,
+  onCheckout,
+  total,
+}: OrderSummaryProps) {
   const router = useRouter();
 
   return (
@@ -20,7 +34,7 @@ export function OrderSummary() {
       </Text>
 
       <View className="mt-8 gap-4">
-        {summaryLines.map((line) => (
+        {lines.map((line) => (
           <SummaryLineItem key={line.label} line={line} />
         ))}
 
@@ -30,7 +44,7 @@ export function OrderSummary() {
               Total Amount
             </Text>
             <Text className="text-3xl font-black text-primary-900">
-              {orderTotal}
+              {formatPhilippinePeso(total)}
             </Text>
           </View>
         </View>
@@ -39,10 +53,11 @@ export function OrderSummary() {
       <View className="mt-8 gap-4">
         <Pressable
           className="rounded-lg bg-primary-900 py-4 active:bg-primary-800"
-          onPress={() => router.push("/checkout")}
+          disabled={isCheckingOut}
+          onPress={onCheckout}
         >
           <Text className="text-center text-sm font-black uppercase tracking-widest text-white">
-            Proceed To Checkout
+            {isCheckingOut ? "Processing Checkout..." : "Proceed To Checkout"}
           </Text>
         </Pressable>
 

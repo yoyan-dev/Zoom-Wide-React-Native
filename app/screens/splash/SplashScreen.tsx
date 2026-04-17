@@ -127,7 +127,7 @@ export function SplashScreen() {
         <View className="flex-1 items-center justify-center px-6">
           <View className="items-center">
             <View
-              className="items-center justify-center rounded-full bg-white/40 p-8"
+              className="items-center justify-center"
               style={styles.logoHalo}
             >
               <Image
