@@ -1,4 +1,4 @@
-import { OrderSuccessScreen } from "@/components/order-success/OrderSuccessScreen";
+import { OrderSuccessScreen } from "@/app/screens/order-success/OrderSuccessScreen";
 
 export default function OrderSuccessRoute() {
   return <OrderSuccessScreen />;

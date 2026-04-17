@@ -1,4 +1,4 @@
-import { OrderTrackingScreen } from "@/components/order-tracking/OrderTrackingScreen";
+import { OrderTrackingScreen } from "@/app/screens/order-tracking/OrderTrackingScreen";
 
 export default function OrderTrackingRoute() {
   return <OrderTrackingScreen />;

@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
 
-import { SplashScreen } from "@/components/splash/SplashScreen";
+import { SplashScreen } from "@/app/screens/splash/SplashScreen";
 
 const SPLASH_DURATION_MS = 2200;
 

@@ -1,4 +1,4 @@
-import { CategoriesScreen } from "@/components/categories/CategoriesScreen";
+import { CategoriesScreen } from "@/app/screens/categories/CategoriesScreen";
 
 export default function CategoriesRoute() {
   return <CategoriesScreen />;

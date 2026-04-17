@@ -134,7 +134,7 @@ export function SplashScreen() {
                 accessibilityLabel="ZOOM WIDE logo"
                 className="h-36 w-48"
                 resizeMode="contain"
-                source={require("../../public/logo.png")}
+                source={require("../../../public/app-icon.png")}
               />
             </View>
 

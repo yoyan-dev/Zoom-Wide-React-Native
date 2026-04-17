@@ -1,4 +1,4 @@
-import { CheckoutScreen } from "@/components/checkout/CheckoutScreen";
+import { CheckoutScreen } from "@/app/screens/checkout/CheckoutScreen";
 
 export default function CheckoutRoute() {
   return <CheckoutScreen />;

@@ -1,4 +1,4 @@
-import { ProductDetailScreen } from "@/components/product-detail/ProductDetailScreen";
+import { ProductDetailScreen } from "@/app/screens/product-detail/ProductDetailScreen";
 
 export default function ProductDetailRoute() {
   return <ProductDetailScreen />;
