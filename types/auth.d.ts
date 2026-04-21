@@ -37,10 +37,14 @@ export interface LoginPayload {
   password: string;
 }
 
+export type CustomerType = "customer" | "contractor";
+
 export interface RegisterPayload {
   email: string;
   password: string;
-  company_name: string;
+  role: "customer";
+  customer_type: CustomerType;
+  company_name?: string | null;
   contact_name: string;
   phone?: string | null;
   billing_address?: string | null;

@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "Zoom-wide-React-Native",
+    "name": "ZWide",
     "slug": "Zoom-wide-React-Native",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "app-icon.png",
+    "icon": "./assets/images/app-icon.png",
     "scheme": "zoomwidereactnative",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/splash-icon.png",
+      "image": "./assets/images/app-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -18,20 +18,29 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/app-icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.yoyanexpo.ZoomwideReactNative"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/app-icon.png"
     },
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router"
+    ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "e7046d5c-0f45-43b0-b758-8b11bcf1e1eb"
+      }
     }
   }
 }

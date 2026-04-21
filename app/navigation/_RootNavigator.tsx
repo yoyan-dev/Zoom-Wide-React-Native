@@ -54,6 +54,10 @@ export function RootNavigator() {
         <Stack.Screen name="security-settings" options={{ headerShown: false }} />
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />
         <Stack.Screen name="checkout" options={{ headerShown: false }} />
+        <Stack.Screen name="project-form" options={{ headerShown: false }} />
+        <Stack.Screen name="project-detail" options={{ headerShown: false }} />
+        <Stack.Screen name="order-detail" options={{ headerShown: false }} />
+        <Stack.Screen name="notifications" options={{ headerShown: false }} />
         <Stack.Screen name="order-success" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: "modal" }} />

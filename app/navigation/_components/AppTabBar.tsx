@@ -4,9 +4,12 @@ import { type ComponentProps } from "react";
 import { Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { useAuthStore } from "@/store/authStore";
+import { isContractorCustomer } from "@/utils/customerAccess";
+
 type MaterialIconName = ComponentProps<typeof MaterialIcons>["name"];
 
-const TAB_META: Record<
+const REGULAR_TAB_META: Record<
   string,
   {
     icon: MaterialIconName;
@@ -31,9 +34,53 @@ const TAB_META: Record<
   },
 };
 
-const ACTIVE_TAB_ALIASES: Record<string, keyof typeof TAB_META> = {
+const CONTRACTOR_TAB_META: Record<
+  string,
+  {
+    icon: MaterialIconName;
+    label: string;
+  }
+> = {
+  categories: {
+    icon: "inventory-2",
+    label: "Materials",
+  },
+  index: {
+    icon: "dashboard",
+    label: "Dashboard",
+  },
+  orders: {
+    icon: "receipt-long",
+    label: "Orders",
+  },
+  profile: {
+    icon: "manage-accounts",
+    label: "Profile",
+  },
+  projects: {
+    icon: "home-work",
+    label: "Projects",
+  },
+};
+
+const REGULAR_ACTIVE_TAB_ALIASES: Record<
+  string,
+  keyof typeof REGULAR_TAB_META
+> = {
   "order-tracking": "orders",
   "product-detail": "categories",
+  products: "categories",
+};
+
+const CONTRACTOR_ACTIVE_TAB_ALIASES: Record<
+  string,
+  keyof typeof CONTRACTOR_TAB_META
+> = {
+  "order-detail": "orders",
+  "order-tracking": "orders",
+  "product-detail": "categories",
+  "project-detail": "projects",
+  "project-form": "projects",
   products: "categories",
 };
 
@@ -42,16 +89,22 @@ export function AppTabBar({
   navigation,
   state,
 }: BottomTabBarProps) {
-  const visibleRoutes = state.routes.filter((route) => route.name in TAB_META);
+  const customer = useAuthStore((state) => state.customer);
+  const isContractor = isContractorCustomer(customer);
+  const tabMeta = isContractor ? CONTRACTOR_TAB_META : REGULAR_TAB_META;
+  const activeAliases = isContractor
+    ? CONTRACTOR_ACTIVE_TAB_ALIASES
+    : REGULAR_ACTIVE_TAB_ALIASES;
+  const visibleRoutes = state.routes.filter((route) => route.name in tabMeta);
   const activeRouteName = state.routes[state.index]?.name;
-  const activeTabName = ACTIVE_TAB_ALIASES[activeRouteName] ?? activeRouteName;
+  const activeTabName = activeAliases[activeRouteName] ?? activeRouteName;
 
   return (
     <SafeAreaView className="bg-neutral-50/95" edges={["bottom"]}>
       <View className="flex-row items-center justify-around rounded-t-lg bg-neutral-50/95 px-4 py-3 shadow-lg">
         {visibleRoutes.map((route) => {
           const isFocused = activeTabName === route.name;
-          const metadata = TAB_META[route.name] ?? {
+          const metadata = tabMeta[route.name] ?? {
             icon: "circle",
             label: descriptors[route.key]?.options.title ?? route.name,
           };

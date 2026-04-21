@@ -1,10 +1,16 @@
 import { type BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { Tabs } from "expo-router";
 
+import { useAuthStore } from "@/store/authStore";
+import { isContractorCustomer } from "@/utils/customerAccess";
+
 import { AppHeader } from "./_components/AppHeader";
 import { AppTabBar } from "./_components/AppTabBar";
 
 export function TabNavigator() {
+  const customer = useAuthStore((state) => state.customer);
+  const isContractor = isContractorCustomer(customer);
+
   return (
     <Tabs
       tabBar={(props: BottomTabBarProps) => <AppTabBar {...props} />}
@@ -15,13 +21,21 @@ export function TabNavigator() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: isContractor ? "Dashboard" : "Home",
         }}
       />
+      {isContractor ? (
+        <Tabs.Screen
+          name="projects"
+          options={{
+            title: "Projects",
+          }}
+        />
+      ) : null}
       <Tabs.Screen
         name="categories"
         options={{
-          title: "Categories",
+          title: isContractor ? "Materials" : "Categories",
         }}
       />
       <Tabs.Screen

@@ -1,13 +1,11 @@
 import type { ApiResponse } from "@/types/h3Response";
 
 const DEFAULT_API_BASE_URL = "https://zoom-wide-backend-nitro.vercel.app/api";
+// const DEFAULT_API_BASE_URL = "http://localhost:3000/api";
 
-const rawBaseUrl =
-  process.env.EXPO_PUBLIC_API_URL ??
-  process.env.VITE_API_URL ??
-  DEFAULT_API_BASE_URL;
+const rawBaseUrl = process.env.VITE_API_URL ?? DEFAULT_API_BASE_URL;
 
-export const API_BASE_URL = rawBaseUrl.replace(/\/$/, "");
+export const API_BASE_URL = rawBaseUrl?.replace(/\/$/, "");
 
 export class ApiClientError extends Error {
   statusCode?: number;
@@ -46,14 +44,13 @@ export async function apiRequest<T>(
 ): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...options,
-    body:
-      options.body === undefined ? undefined : JSON.stringify(options.body),
+    body: options.body === undefined ? undefined : JSON.stringify(options.body),
     headers: buildHeaders(options),
   });
 
-  const payload = (await response.json().catch(() => null)) as
-    | ApiResponse<T>
-    | null;
+  const payload = (await response
+    .json()
+    .catch(() => null)) as ApiResponse<T> | null;
 
   if (!response.ok || payload?.status === "error") {
     const message =

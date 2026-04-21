@@ -1,5 +1,10 @@
 import { apiRequest } from "@/services/apiClient";
-import type { DriverAssignedOrder, FetchOrderParams, Order } from "@/types/order";
+import type {
+  CreateOrderPayload,
+  DriverAssignedOrder,
+  FetchOrderParams,
+  Order,
+} from "@/types/order";
 
 function toQueryString(params: FetchOrderParams = {}) {
   const searchParams = new URLSearchParams();
@@ -39,5 +44,13 @@ export function fetchOrderById(accessToken: string, orderId: string) {
   return apiRequest<DriverAssignedOrder>(`/orders/${orderId}`, {
     accessToken,
     method: "GET",
+  });
+}
+
+export function createOrder(accessToken: string, payload: CreateOrderPayload) {
+  return apiRequest<Order>("/orders", {
+    accessToken,
+    body: payload,
+    method: "POST",
   });
 }

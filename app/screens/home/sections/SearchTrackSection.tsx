@@ -23,15 +23,26 @@ export function SearchTrackSection() {
         />
       </View>
 
-      <Pressable
-        className="h-14 flex-row items-center justify-center gap-3 rounded-lg bg-white px-6 active:opacity-70"
-        onPress={() => router.push("/order-tracking")}
-      >
-        <MaterialIcons name="local-shipping" size={24} color="#0A2238" />
-        <Text className="font-black tracking-tight text-primary-900">
-          Track Order
-        </Text>
-      </Pressable>
+      <View className="flex flex-row gap-4">
+        <Pressable
+          className="flex-1 h-14 flex-row items-center justify-center gap-3 rounded-lg bg-primary-900 px-6 active:opacity-70"
+          onPress={() => router.push("/products")}
+        >
+          <MaterialIcons name="list" size={24} color="#FFFFFF" />
+          <Text className="font-black tracking-tight text-white">
+            Browse Products
+          </Text>
+        </Pressable>
+        <Pressable
+          className="flex-1 h-14 flex-row items-center justify-center gap-3 rounded-lg bg-white px-6 active:opacity-70"
+          onPress={() => router.push("/order-tracking")}
+        >
+          <MaterialIcons name="local-shipping" size={24} color="#0A2238" />
+          <Text className="font-black tracking-tight text-primary-900">
+            Track Order
+          </Text>
+        </Pressable>
+      </View>
     </View>
   );
 }

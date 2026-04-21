@@ -1,7 +1,10 @@
+import type { CustomerType } from "./auth";
+
 export interface Customer {
   id: string;
   user_id: string | null;
-  company_name: string;
+  customer_type?: CustomerType | null;
+  company_name: string | null;
   contact_name: string;
   phone: string | null;
   email: string;

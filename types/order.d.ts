@@ -10,6 +10,7 @@ export type OrderStatus =
 export interface Order {
   id: string;
   customer_id: string;
+  project_id?: string | null;
   status: OrderStatus;
   total_amount: number;
   notes: string | null;
@@ -34,6 +35,11 @@ export interface DriverAssignedOrder extends Order {
   delivery?: Delivery | null;
   deliveries?: Delivery[] | null;
   items?: OrderItem[] | null;
+  project?: {
+    id: string;
+    name: string;
+    location?: string | null;
+  } | null;
 }
 
 export interface CreateOrderItemPayload {
@@ -45,6 +51,7 @@ export interface CreateOrderItemPayload {
 
 export interface CreateOrderPayload {
   customer_id?: string;
+  project_id?: string | null;
   status?: OrderStatus;
   total_amount: number;
   notes?: string | null;

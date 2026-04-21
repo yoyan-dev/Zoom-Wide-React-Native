@@ -16,19 +16,24 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useAuthStore } from "@/store/authStore";
-import type { RegisterPayload } from "@/types/auth";
+import type { CustomerType, RegisterPayload } from "@/types/auth";
 
-type SignUpErrors = Partial<
-  Record<keyof RegisterPayload | "confirmPassword", string>
->;
+type FormFieldName = Exclude<
+  keyof RegisterPayload,
+  "role" | "customer_type"
+> | "confirmPassword";
 
-type FieldName = keyof RegisterPayload | "confirmPassword";
+type SignUpValues = Record<FormFieldName, string> & {
+  customer_type: CustomerType;
+};
+
+type SignUpErrors = Partial<Record<FormFieldName | "customer_type", string>>;
 
 type FieldConfig = {
   autoComplete?: "email" | "name" | "organization" | "tel" | "street-address";
   keyboardType?: "default" | "email-address" | "phone-pad";
   label: string;
-  name: FieldName;
+  name: FormFieldName;
   placeholder: string;
   required?: boolean;
   secure?: boolean;
@@ -80,7 +85,7 @@ const SIGN_UP_FIELDS: FieldConfig[] = [
   },
 ];
 
-const INITIAL_VALUES: Record<FieldName, string> = {
+const INITIAL_VALUES: Record<FormFieldName, string> = {
   billing_address: "",
   company_name: "",
   confirmPassword: "",
@@ -91,7 +96,24 @@ const INITIAL_VALUES: Record<FieldName, string> = {
   shipping_address: "",
 };
 
-function validateSignUp(values: Record<FieldName, string>) {
+const CUSTOMER_TYPE_OPTIONS: Array<{
+  description: string;
+  label: string;
+  value: CustomerType;
+}> = [
+  {
+    description: "Buy materials for home, business, or general supply needs.",
+    label: "Customer",
+    value: "customer",
+  },
+  {
+    description: "Manage project-based purchases as a trade or construction account.",
+    label: "Contractor",
+    value: "contractor",
+  },
+];
+
+function validateSignUp(values: SignUpValues) {
   const errors: SignUpErrors = {};
 
   if (!values.email.trim()) {
@@ -108,7 +130,10 @@ function validateSignUp(values: Record<FieldName, string>) {
     errors.confirmPassword = "Passwords do not match.";
   }
 
-  if (!values.company_name.trim()) {
+  if (
+    values.customer_type === "contractor" &&
+    !values.company_name.trim()
+  ) {
     errors.company_name = "Company name is required.";
   }
 
@@ -119,14 +144,16 @@ function validateSignUp(values: Record<FieldName, string>) {
   return errors;
 }
 
-function toRegisterPayload(values: Record<FieldName, string>): RegisterPayload {
+function toRegisterPayload(values: SignUpValues): RegisterPayload {
   return {
     billing_address: values.billing_address.trim() || null,
-    company_name: values.company_name.trim(),
+    company_name: values.company_name.trim() || null,
     contact_name: values.contact_name.trim(),
+    customer_type: values.customer_type,
     email: values.email.trim().toLowerCase(),
     password: values.password,
     phone: values.phone.trim() || null,
+    role: "customer",
     shipping_address: values.shipping_address.trim() || null,
   };
 }
@@ -137,13 +164,21 @@ export function SignUpScreen() {
   const rememberSession = useAuthStore((state) => state.rememberSession);
   const setRememberSession = useAuthStore((state) => state.setRememberSession);
   const signUp = useAuthStore((state) => state.signUp);
-  const [values, setValues] = useState(INITIAL_VALUES);
+  const [values, setValues] = useState<SignUpValues>({
+    ...INITIAL_VALUES,
+    customer_type: "customer",
+  });
   const [errors, setErrors] = useState<SignUpErrors>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
-  const setFieldValue = (name: FieldName, value: string) => {
+  const setFieldValue = (name: FormFieldName, value: string) => {
     setValues((current) => ({ ...current, [name]: value }));
+  };
+
+  const setCustomerType = (customerType: CustomerType) => {
+    setValues((current) => ({ ...current, customer_type: customerType }));
+    setErrors((current) => ({ ...current, company_name: undefined }));
   };
 
   const handleSubmit = async () => {
@@ -235,16 +270,66 @@ export function SignUpScreen() {
                 style={styles.formShadow}
               >
                 <View className="gap-5">
+                  <View className="gap-3">
+                    <Text className="text-[10px] font-black uppercase tracking-widest text-neutral-500">
+                      Account type *
+                    </Text>
+                    <View className="gap-3">
+                      {CUSTOMER_TYPE_OPTIONS.map((option) => {
+                        const isSelected =
+                          values.customer_type === option.value;
+
+                        return (
+                          <Pressable
+                            className={[
+                              "rounded-lg border px-4 py-4",
+                              isSelected
+                                ? "border-accent-600 bg-accent-50"
+                                : "border-neutral-200 bg-white",
+                            ].join(" ")}
+                            disabled={isLoading}
+                            key={option.value}
+                            onPress={() => setCustomerType(option.value)}
+                          >
+                            <Text
+                              className={[
+                                "text-sm font-black uppercase tracking-widest",
+                                isSelected
+                                  ? "text-accent-700"
+                                  : "text-neutral-700",
+                              ].join(" ")}
+                            >
+                              {option.label}
+                            </Text>
+                            <Text className="mt-1 text-sm font-medium leading-5 text-neutral-500">
+                              {option.description}
+                            </Text>
+                          </Pressable>
+                        );
+                      })}
+                    </View>
+                  </View>
+
                   {SIGN_UP_FIELDS.map((field) => {
                     const isPasswordField =
                       field.name === "password" ||
                       field.name === "confirmPassword";
+                    const isCompanyField = field.name === "company_name";
+                    const isRequired =
+                      field.required &&
+                      (!isCompanyField ||
+                        values.customer_type === "contractor");
+                    const fieldLabel = isCompanyField
+                      ? values.customer_type === "contractor"
+                        ? "Company name"
+                        : "Company name (optional)"
+                      : field.label;
 
                     return (
                       <View className="gap-2" key={field.name}>
                         <Text className="text-[10px] font-black uppercase tracking-widest text-neutral-500">
-                          {field.label}
-                          {field.required ? " *" : ""}
+                          {fieldLabel}
+                          {isRequired ? " *" : ""}
                         </Text>
                         <View className="flex-row items-center rounded-lg bg-neutral-100 px-4">
                           <TextInput
@@ -335,8 +420,7 @@ export function SignUpScreen() {
                   </Pressable>
 
                   <Text className="text-center text-xs font-semibold leading-5 text-neutral-500">
-                    Registration follows the customer signup contract in
-                    docs/api.md, then signs in with the new credentials.
+                    @zoomwide © 2026 All rights reserved.
                   </Text>
                 </View>
               </View>

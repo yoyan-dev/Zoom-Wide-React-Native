@@ -4,8 +4,10 @@ import { useEffect, useMemo } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { useCartStore } from "@/store/cartStore";
 import { useAuthStore } from "@/store/authStore";
+import { useCartStore } from "@/store/cartStore";
+import { useContractorOrderStore } from "@/store/contractorOrderStore";
+import { isContractorCustomer } from "@/utils/customerAccess";
 
 export function AppHeader() {
   const router = useRouter();
@@ -13,8 +15,10 @@ export function AppHeader() {
   const loadCart = useCartStore((state) => state.loadCart);
   const hasLoadedCart = useCartStore((state) => state.hasLoaded);
   const items = useCartStore((state) => state.items);
+  const contractorItems = useContractorOrderStore((state) => state.items);
   const user = useAuthStore((state) => state.user);
   const customer = useAuthStore((state) => state.customer);
+  const isContractor = isContractorCustomer(customer);
   const avatarUri =
     typeof user?.image_url === "string" && user.image_url.length > 0
       ? user.image_url
@@ -26,22 +30,25 @@ export function AppHeader() {
     user?.email?.charAt(0) ??
     "Z";
   const cartItemCount = useMemo(
-    () => items.reduce((total, item) => total + item.quantity, 0),
-    [items],
+    () =>
+      isContractor
+        ? contractorItems.reduce((total, item) => total + item.quantity, 0)
+        : items.reduce((total, item) => total + item.quantity, 0),
+    [contractorItems, isContractor, items],
   );
   const cartBadgeLabel = cartItemCount > 99 ? "99+" : String(cartItemCount);
 
   useEffect(() => {
-    if (!accessToken || !customer?.id || hasLoadedCart) {
+    if (isContractor || !accessToken || !customer?.id || hasLoadedCart) {
       return;
     }
 
     void loadCart();
-  }, [accessToken, customer?.id, hasLoadedCart, loadCart]);
+  }, [accessToken, customer?.id, hasLoadedCart, isContractor, loadCart]);
 
   return (
     <SafeAreaView className="bg-primary-900" edges={["top"]}>
-      <View className="flex-row items-center justify-between bg-primary-900 px-6 py-4 shadow-sm">
+      <View className="flex-row items-center justify-between bg-primary-700 px-6 py-4 shadow-sm">
         <Text className="text-xl font-black uppercase tracking-widest text-white">
           ZOOM WIDE
         </Text>
@@ -51,9 +58,13 @@ export function AppHeader() {
             accessibilityLabel="Open notifications"
             accessibilityRole="button"
             className="h-10 w-10 items-center justify-center rounded-lg bg-white/12 active:scale-95 active:opacity-70"
-            onPress={() => router.push("/profile")}
+            onPress={() => router.push(isContractor ? "/notifications" : "/profile")}
           >
-            <MaterialIcons name="notifications-none" size={23} color="#FFFFFF" />
+            <MaterialIcons
+              name="notifications-none"
+              size={23}
+              color="#FFFFFF"
+            />
             <View className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-accent-600" />
           </Pressable>
 

@@ -81,12 +81,10 @@ export function EditProfileScreen() {
   const router = useRouter();
   const accessToken = useAuthStore((state) => state.accessToken);
   const fetchCurrentUser = useAuthStore((state) => state.fetchCurrentUser);
-  const [formValues, setFormValues] = useState<ProfileFormValues>(
-    buildInitialValues(),
-  );
-  const [initialValues, setInitialValues] = useState<ProfileFormValues>(
-    buildInitialValues(),
-  );
+  const [formValues, setFormValues] =
+    useState<ProfileFormValues>(buildInitialValues());
+  const [initialValues, setInitialValues] =
+    useState<ProfileFormValues>(buildInitialValues());
   const [errors, setErrors] = useState<ProfileFormErrors>({});
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -202,7 +200,7 @@ export function EditProfileScreen() {
   return (
     <View className="flex-1 bg-neutral-50">
       <StatusBar style="dark" />
-      <SafeAreaView className="flex-1 bg-primary-900" edges={["top"]}>
+      <SafeAreaView className=" bg-primary-900" edges={["top"]}>
         <View className="flex-row items-center justify-between bg-primary-900 px-6 py-4">
           <View className="flex-row items-center gap-4">
             <Pressable
@@ -286,12 +284,6 @@ export function EditProfileScreen() {
                 <View className="gap-6">
                   {[
                     {
-                      field: "image_url" as const,
-                      keyboardType: "default" as const,
-                      label: "Profile Image URL",
-                      placeholder: "https://example.com/profile.jpg",
-                    },
-                    {
                       field: "full_name" as const,
                       keyboardType: "default" as const,
                       label: "Full Name",
@@ -328,13 +320,13 @@ export function EditProfileScreen() {
                       </Text>
                       <TextInput
                         autoCapitalize={
-                          field.field === "email" || field.field === "image_url"
-                            ? "none"
-                            : "words"
+                          field.field === "email" ? "none" : "words"
                         }
                         className="rounded-lg bg-neutral-200 px-5 py-4 text-base font-medium text-neutral-900"
                         keyboardType={field.keyboardType}
-                        onChangeText={(value) => setFieldValue(field.field, value)}
+                        onChangeText={(value) =>
+                          setFieldValue(field.field, value)
+                        }
                         placeholder={field.placeholder}
                         placeholderTextColor="#737781"
                         value={formValues[field.field]}
