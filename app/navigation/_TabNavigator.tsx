@@ -9,7 +9,7 @@ import { AppTabBar } from "./_components/AppTabBar";
 
 export function TabNavigator() {
   const customer = useAuthStore((state) => state.customer);
-  const isContractor = isContractorCustomer(customer);
+  const isContractor = isContractorCustomer();
 
   return (
     <Tabs

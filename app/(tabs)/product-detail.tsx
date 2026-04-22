@@ -6,7 +6,7 @@ import { isContractorCustomer } from "@/utils/customerAccess";
 export default function ProductDetailRoute() {
   const customer = useAuthStore((state) => state.customer);
 
-  return isContractorCustomer(customer) ? (
+  return isContractorCustomer() ? (
     <ContractorProductDetailScreen />
   ) : (
     <ProductDetailScreen />

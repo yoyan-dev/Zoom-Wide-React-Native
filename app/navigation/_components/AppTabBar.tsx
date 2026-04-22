@@ -90,7 +90,7 @@ export function AppTabBar({
   state,
 }: BottomTabBarProps) {
   const customer = useAuthStore((state) => state.customer);
-  const isContractor = isContractorCustomer(customer);
+  const isContractor = isContractorCustomer();
   const tabMeta = isContractor ? CONTRACTOR_TAB_META : REGULAR_TAB_META;
   const activeAliases = isContractor
     ? CONTRACTOR_ACTIVE_TAB_ALIASES

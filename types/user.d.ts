@@ -18,6 +18,7 @@ export interface User {
   role: UserRole;
   phone: string | null;
   image_url?: string | null;
+  customer_type?: string;
   is_active: boolean;
   created_at: string;
   updated_at: string;

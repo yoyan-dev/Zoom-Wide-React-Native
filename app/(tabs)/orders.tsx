@@ -6,5 +6,9 @@ import { isContractorCustomer } from "@/utils/customerAccess";
 export default function OrdersRoute() {
   const customer = useAuthStore((state) => state.customer);
 
-  return isContractorCustomer(customer) ? <ContractorOrdersScreen /> : <OrderHistoryScreen />;
+  return isContractorCustomer() ? (
+    <ContractorOrdersScreen />
+  ) : (
+    <OrderHistoryScreen />
+  );
 }

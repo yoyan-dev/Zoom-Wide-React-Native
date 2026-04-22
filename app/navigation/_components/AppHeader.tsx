@@ -18,7 +18,7 @@ export function AppHeader() {
   const contractorItems = useContractorOrderStore((state) => state.items);
   const user = useAuthStore((state) => state.user);
   const customer = useAuthStore((state) => state.customer);
-  const isContractor = isContractorCustomer(customer);
+  const isContractor = isContractorCustomer();
   const avatarUri =
     typeof user?.image_url === "string" && user.image_url.length > 0
       ? user.image_url
@@ -58,7 +58,9 @@ export function AppHeader() {
             accessibilityLabel="Open notifications"
             accessibilityRole="button"
             className="h-10 w-10 items-center justify-center rounded-lg bg-white/12 active:scale-95 active:opacity-70"
-            onPress={() => router.push(isContractor ? "/notifications" : "/profile")}
+            onPress={() =>
+              router.push(isContractor ? "/notifications" : "/profile")
+            }
           >
             <MaterialIcons
               name="notifications-none"

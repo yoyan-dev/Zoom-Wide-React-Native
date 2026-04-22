@@ -1,5 +1,7 @@
-import type { Customer } from "@/types/customer";
+import { useAuthStore } from "@/store/authStore";
 
-export function isContractorCustomer(customer: Customer | null | undefined) {
-  return customer?.customer_type === "contractor";
+export function isContractorCustomer() {
+  const user = useAuthStore((state) => state.user);
+  return user?.customer_type === "contractor";
+  // return true;
 }

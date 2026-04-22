@@ -13,10 +13,11 @@ export function ProfileHeaderCard() {
   const avatar = user?.image_url ?? null;
   const badge = customer?.company_name ? "Trade" : "Pro";
   const name =
-    user?.full_name ?? user?.contact_name ?? customer?.contact_name ?? "ZOOM WIDE User";
-  const role =
-    user?.role?.replace(/_/g, " ").toUpperCase() ?? "CUSTOMER ACCOUNT";
-
+    user?.full_name ??
+    user?.contact_name ??
+    customer?.contact_name ??
+    "ZOOM WIDE User";
+  const customerType = user?.customer_type ?? "Customer";
   return (
     <Pressable
       className="mb-10 flex-row items-center gap-6 rounded-xl bg-white p-6"
@@ -48,8 +49,8 @@ export function ProfileHeaderCard() {
         <Text className="mb-1 text-2xl font-black leading-none text-primary-900">
           {name}
         </Text>
-        <Text className="mb-3 text-sm font-semibold text-neutral-600">
-          {role}
+        <Text className="mb-3 text-sm font-semibold text-neutral-600 uppercase">
+          {String(customerType)}
         </Text>
         <TierBadge label={customer?.company_name ?? "ZOOM WIDE Account"} />
       </View>
